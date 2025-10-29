@@ -1,0 +1,9 @@
+{
+	"name": "swatiadf",
+	"location": "canadacentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7ba9e8f7-90ae-4b38-9db6-d5c2374f226d",
+		"tenantId": "e4d98dd2-9199-42e5-ba8b-da3e763ede2e"
+	}
+}
