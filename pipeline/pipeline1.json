@@ -38,11 +38,17 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "AzureSQLToLake",
 				"type": "Copy",
 				"dependsOn": [
 					{
 						"activity": "last_cdc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "current",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -59,19 +65,87 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "Select * from @{pipeline().parameters.Schema}.@{pipeline().parameters.table} where @{pipeline().parameters.cdc_col}> 'activity('last_cdc').output.value[0].cdc'",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "AzureSql",
 						"type": "DatasetReference"
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dynamic_parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "bronze",
+							"folder": "Users",
+							"file": {
+								"value": "@concat(pipeline().parameters.table,'_',variables('current'))",
+								"type": "Expression"
+							}
+						}
+					}
 				]
+			},
+			{
+				"name": "current",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current",
+					"value": {
+						"value": "@utcNow()",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"Schema": {
+				"type": "string"
+			},
+			"table": {
+				"type": "string"
+			},
+			"cdc_col": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"current": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
