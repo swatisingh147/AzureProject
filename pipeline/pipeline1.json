@@ -127,7 +127,7 @@
 				"typeProperties": {
 					"variableName": "current",
 					"value": {
-						"value": "@formatDateTime(utcNow(), 'yyyyMMddHHmmss')",
+						"value": "utcNow()",
 						"type": "Expression"
 					}
 				}
@@ -167,7 +167,7 @@
 									"referenceName": "dynamic_parquet",
 									"type": "DatasetReference",
 									"parameters": {
-										"container": "Bronze",
+										"container": "bronze",
 										"folder": {
 											"value": "@pipeline().parameters.table",
 											"type": "Expression"
