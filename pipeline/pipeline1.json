@@ -302,7 +302,7 @@
 			},
 			"table": {
 				"type": "string",
-				"defaultValue": "Dimuser"
+				"defaultValue": "dimuser"
 			},
 			"cdc_col": {
 				"type": "string",
