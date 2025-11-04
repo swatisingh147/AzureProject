@@ -127,7 +127,7 @@
 				"typeProperties": {
 					"variableName": "current",
 					"value": {
-						"value": "utcNow()",
+						"value": "@utcNow()",
 						"type": "Expression"
 					}
 				}
