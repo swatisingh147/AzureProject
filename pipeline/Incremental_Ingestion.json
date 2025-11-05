@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Incremental_Ingestion",
 	"properties": {
 		"activities": [
 			{
@@ -107,7 +107,7 @@
 						"parameters": {
 							"container": "bronze",
 							"folder": {
-								"value": "@pipeline().parameters.table",
+								"value": "@{pipeline().parameters.table}_cdc",
 								"type": "Expression"
 							},
 							"file": {
@@ -248,7 +248,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc",
+											"type": "Expression"
+										},
 										"file": "empty.json"
 									}
 								}
